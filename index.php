@@ -1,18 +1,19 @@
 <?php
 
 
-print("<h1>Administrasjon av klasser og studenter</h1>");
+print("<h1>Studentdatabase</h1>");
 
-print("<h3>Velg funksjon</h3>");
+print("<h2>Klasser</h2>");
 
-print("<ul>");
-print("<li><a href='index.php?valg=visKlasser'>Vis alle klasser</a></li>");
-print("<li><a href='index.php?valg=registrerKlasse'>Registrer klasse</a></li>");
-print("<li><a href='index.php?valg=slettKlasse'>Slett klasse</a></li>");
-print("<li><a href='index.php?valg=visStudenter'>Vis alle studenter</a></li>");
-print("<li><a href='index.php?valg=registrerStudent'>Registrer student</a></li>");
-print("<li><a href='index.php?valg=slettStudent'>Slett student</a></li>");
-print("</ul>");
+print("<a href='index.php?valg=visKlasser'>Vis alle klasser</a><br />");
+print("<a href='index.php?valg=registrerKlasse'>Registrer klasse</a><br />");
+print("<a href='index.php?valg=slettKlasse'>Slett klasse</a><br />");
+
+print("<h2>Studenter</h2>");
+
+print("<a href='index.php?valg=visStudenter'>Vis alle studenter</a><br />");
+print("<a href='index.php?valg=registrerStudent'>Registrer student</a><br />");
+print("<a href='index.php?valg=slettStudent'>Slett student</a><br />");
 
 $valg = $_GET["valg"] ?? "";
 
