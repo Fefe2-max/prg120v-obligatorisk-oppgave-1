@@ -1,46 +1,93 @@
-<?php
-
-?>
-
-<script src="funksjoner.js"></script>
-
-<h3>Slett student</h3>
-
-<form method="post" action="" onsubmit="return bekreft()">
-    Brukernavn
-    <input type="text" name="brukernavn" maxlength="7" required />
-    <br />
-
-    <input type="submit" value="Slett student" name="slettStudentKnapp" />
-</form>
 
 <?php
+
+
+include("db-tilkobling.php");
+
+$melding = "";
+
 if (isset($_POST["slettStudentKnapp"]))
 {
-    $brukernavn = trim($_POST["brukernavn"]);
+    $brukernavn = trim($_POST["brukernavn"] ?? "");
 
-    include("db-tilkobling.php");
-
-    $sqlSetning = "SELECT * FROM student WHERE brukernavn='$brukernavn';";
-    $sqlResultat = mysqli_query($db, $sqlSetning)
-        or die("ikke mulig å hente data fra databasen");
-
-    $antallRader = mysqli_num_rows($sqlResultat);
-
-    if ($antallRader == 0)
+    if (!$brukernavn)
     {
-        print("Studenten finnes ikke");
+        $melding = "Du må velge en student";
     }
     else
     {
-        $sqlSetning = "DELETE FROM student WHERE brukernavn='$brukernavn';";
+        $brukernavn = mysqli_real_escape_string($db, $brukernavn);
 
-        mysqli_query($db, $sqlSetning)
-            or die("ikke mulig å slette data i databasen");
+        $sqlSetning = "SELECT * FROM student WHERE brukernavn='$brukernavn';";
+        $sqlResultat = mysqli_query($db, $sqlSetning)
+            or die("Ikke mulig å hente data fra databasen");
 
-        print("Studenten er nå slettet: " . htmlspecialchars($brukernavn));
+        $antallRader = mysqli_num_rows($sqlResultat);
+
+        if ($antallRader == 0)
+        {
+            $melding = "Studenten finnes ikke";
+        }
+        else
+        {
+            $sqlSetning = "DELETE FROM student WHERE brukernavn='$brukernavn';";
+            mysqli_query($db, $sqlSetning)
+                or die("Ikke mulig å slette data fra databasen");
+
+            $melding = "Studenten er nå slettet";
+        }
     }
-
-    mysqli_close($db);
 }
 ?>
+
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <title>Slett student</title>
+    <script src="funksjoner.js"></script>
+</head>
+<body>
+
+<h3>Slett student</h3>
+
+<form method="post" action="" id="slettStudentSkjema" name="slettStudentSkjema" onsubmit="return bekreft()">
+
+    Brukernavn
+    <select id="brukernavn" name="brukernavn" required>
+        <option value="">Velg student</option>
+
+        <?php
+        $sqlSetning = "SELECT * FROM student ORDER BY brukernavn;";
+        $sqlResultat = mysqli_query($db, $sqlSetning)
+            or die("Ikke mulig å hente data fra databasen");
+
+        $antallRader = mysqli_num_rows($sqlResultat);
+
+        for ($r = 1; $r <= $antallRader; $r++)
+        {
+            $rad = mysqli_fetch_array($sqlResultat);
+
+            $brukernavn = htmlspecialchars($rad["brukernavn"], ENT_QUOTES, "UTF-8");
+            $fornavn = htmlspecialchars($rad["fornavn"], ENT_QUOTES, "UTF-8");
+            $etternavn = htmlspecialchars($rad["etternavn"], ENT_QUOTES, "UTF-8");
+
+            print("<option value='$brukernavn'>$brukernavn - $fornavn $etternavn</option>");
+        }
+        ?>
+    </select>
+
+    <br />
+
+    <input type="submit" value="Slett student" id="slettStudentKnapp" name="slettStudentKnapp" />
+
+</form>
+
+<?php
+print("<p>$melding</p>");
+?>
+
+<p><a href="index.php">Tilbake til hovedmenyen</a></p>
+
+</body>
+</html>
