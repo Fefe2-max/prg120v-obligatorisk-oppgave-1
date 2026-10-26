@@ -1,0 +1,45 @@
+<?php
+
+
+print("<h1>Administrasjon av klasser og studenter</h1>");
+
+print("<h3>Velg funksjon</h3>");
+
+print("<ul>");
+print("<li><a href='index.php?valg=visKlasser'>Vis alle klasser</a></li>");
+print("<li><a href='index.php?valg=registrerKlasse'>Registrer klasse</a></li>");
+print("<li><a href='index.php?valg=slettKlasse'>Slett klasse</a></li>");
+print("<li><a href='index.php?valg=visStudenter'>Vis alle studenter</a></li>");
+print("<li><a href='index.php?valg=registrerStudent'>Registrer student</a></li>");
+print("<li><a href='index.php?valg=slettStudent'>Slett student</a></li>");
+print("</ul>");
+
+$valg = $_GET["valg"] ?? "";
+
+switch ($valg)
+{
+    case "visKlasser":
+        include("vis-alle-klasser.php");
+        break;
+
+    case "registrerKlasse":
+        include("registrer-klasse.php");
+        break;
+
+    case "slettKlasse":
+        include("slett-klasse.php");
+        break;
+
+    case "visStudenter":
+        include("vis-alle-studenter.php");
+        break;
+
+    case "registrerStudent":
+        include("registrer-student.php");
+        break;
+
+    case "slettStudent":
+        include("slett-student.php");
+        break;
+}
+?>
